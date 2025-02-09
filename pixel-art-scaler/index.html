@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Pixel Art Scaler" property="og:title" />
+        <meta content="A tool to scale your pixel art to any size, without quality loss. Created by s4300." property="og:description" />
+        <meta content="https://tools.s4300.com/pixel-art-scaler" property="og:url" />
+        <meta content="#32cd32" data-react-helmet="true" name="theme-color" />
+        <!-- <meta content="https://embed.com/embedimage.png" property="og:image" /> -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link rel="stylesheet" href="../styles.css">
+        <!-- TODO: create site icon -->
+        <title>Pixel Art Scaler | s4300</title>
+    </head>
+    <body class="center" data-bs-theme="dark">
+        <main class="floating">
+            <h2>Pixel Art Scaler</h2>
+            <a>Upload a file to get started.</a>
+            <div id="imageDiv" hidden>
+                <img id="scaledImage">
+                <div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Width</span>
+                        <input type="number" id="width" class="form-control" autocapitalize="off" autocomplete="off" autofocus="off" value="50" min="1" max="5000" placeholder="Enter a number.. (in pixels)">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Height</span>
+                        <input type="number" id="height" class="form-control" autocapitalize="off" autocomplete="off" autofocus="off" value="50" min="1" max="5000" placeholder="Enter a number.. (in pixels)">
+                    </div>
+                </div>
+            </div>
+            <div id="options" class="mb-3 mt-3">
+                <input class="form-control" type="file" id="upload" accept="image/png, image/jpeg">
+            </div>
+            <div id="options2" class="mb-3 mt-3" hidden>
+                <button id="double" class="btn btn-secondary">+</button>
+                <button id="half" class="btn btn-secondary">-</button>
+                <button id="export" class="btn btn-success" style="width: 100%;">Export</button>
+                <button id="cancel" class="btn btn-danger" style="width: 100%;">Cancel</button>
+            </div>
+        </main>
+        <footer>Site made by s4300 • <a href="../">Return to main page</a></footer>
+        <!-- Used to render images -->
+        <canvas hidden></canvas>
+        <!-- Page-specific styling -->
+        <style>
+            #scaledImage {
+                margin-left: 125px;
+                margin-right: 125px;
+                width: 100px;
+                height: auto;
+                object-fit: contain;
+                image-rendering: pixelated;
+                image-rendering: -moz-crisp-edges;
+                image-rendering: crisp-edges;
+            }
+
+            #export, #cancel {
+                margin-top: 10px;
+            }
+        </style>
+        <!-- Page-specific script -->
+        <script>
+            let bitmap;
+            let file;
+            let w = document.getElementById("width");
+            let h = document.getElementById("height");
+
+            document.getElementById("upload").addEventListener("change", async () => {
+                bitmap = await createImageBitmap(document.getElementById("upload").files[0]);
+                file = document.getElementById("upload").files[0]
+
+                document.getElementById("options").hidden = true;
+                document.getElementById("options2").hidden = false;
+                document.getElementById("imageDiv").hidden = false;
+                document.querySelector("img").src = URL.createObjectURL(file);
+
+                w.value = bitmap.width;
+                h.value = bitmap.height;
+            });
+
+            document.getElementById("double").addEventListener("click", () => {});
+
+            document.getElementById("cancel").addEventListener("click", () => {
+                history.go();
+            });
+
+            document.getElementById("export").addEventListener("click", () => {
+                let canvas = document.querySelector("canvas");
+                let ctx = canvas.getContext("2d");
+                let width = Number(w.value);
+                let height = Number(h.value);
+
+                if (width == NaN || width > 5000 || width < 0) return alert("Invalid width!");
+                if (height == NaN || height > 5000 || height < 0) return alert("Invalid height!");
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(bitmap, 0, 0, width, height);
+                let data = canvas.toDataURL('image/png');
+                ctx.clearRect(0, 0, width, height);
+                
+                let l = document.createElement("a");
+                document.body.appendChild(l);
+                l.href = data;
+                l.download = `${file.name.substring(0, file.name.length - 4)} resized.png`;
+                l.click();
+                l.remove();
+            });
+        </script>
+    </body>
+</html>

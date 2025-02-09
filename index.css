@@ -1,0 +1,32 @@
+/* This isn't the best CSS I've ever wrote, but eh idc that much. */
+
+h1 {
+    font-size: 50px;
+    margin: 0;
+    text-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
+}
+
+p {
+    font-size: 20px;
+}
+
+.icon {
+    width: 24px;
+    height: auto;
+    margin-top: -3px;
+}
+
+.btn-discord {
+    background-color: #5865F2;
+    color: white;
+}
+
+.btn-discord:hover {
+    background-color: #454eb4;
+    border: 1px solid #3b44a0;
+}
+
+.btn-discord:active {
+    background-color: #3d45a1 !important;
+    border: 1px solid #353d91 !important;
+}
