@@ -3,7 +3,7 @@ const output = document.getElementById("output");
 
 function obfuscate(code) {
     let r = code;
-    for (let i = 0; i < Math.floor(Math.random() * 7) + 2; i++) {
+    for (let i = 0; i < Math.floor(Math.random() * 5) + 5; i++) {
         r = `${r}`;
         if (Math.random() > 0.5) {
             r = `eval(atob(\`${btoa(r)}\`))`;
@@ -49,5 +49,4 @@ document.getElementById("download").addEventListener("click", () => {
 document.getElementById("uploadFile").addEventListener("change", async () => {
     let file = document.getElementById("uploadFile").files[0];
     document.getElementById("input").value = await file.text();
-    document.getElementById("obfuscate").click();
 });
